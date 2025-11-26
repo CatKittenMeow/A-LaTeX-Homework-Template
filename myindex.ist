@@ -1,0 +1,4 @@
+% 为每个字母的分组添加小标题, 默认无标题
+headings_flag 1
+heading_prefix "\\textbf{"
+heading_suffix "}\\nopagebreak\n"

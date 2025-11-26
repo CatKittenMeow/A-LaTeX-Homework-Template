@@ -1,4 +1,7 @@
-% 模板原作者: L.H.S., 该版本更新日期: 2025年11月4日. 于 texpage.com 用 XeLaTeX 编译. 作者邮箱: catkittenmeow@foxmail.com
+% 模板原作者: L.H.S., 该版本更新日期: 2025年11月26日. 于 texpage.com 用 XeLaTeX 编译. 作者邮箱: catkittenmeow@foxmail.com
+
+% 2025/11/13 增加subcaption宏包
+% 2025/11/26 增加索引表设置, 增加hyperref样式设置
 
 % 0. 文件格式设置
 \documentclass[12pt]{article}
@@ -51,10 +54,14 @@
 
 \usepackage{booktabs}
 \usepackage{caption}
-
-\usepackage{hyperref} % 跳转功能, \ref 和 \label 等
+\usepackage{subcaption} % 子图
 
 \usepackage{multicol} % 双栏/多栏显示
+
+\usepackage{cite}
+% \usepackage{natbib} % 需要为author-year引用格式, 配合\bibliographystyle{plainnat}
+\usepackage{url} % 引用网页显示URL
+\usepackage{xurl} % 允许 URL 在任意字符处换行
 
 \usepackage{xfrac}
 % 利用\sfrac{}{}输入斜分数线, 但是如果是长斜线可以考虑使用   
@@ -90,6 +97,46 @@
     frame=single,  % 代码块框架
 }
 
+% 以下是索引表的设置, 关联文件: `myindex.ist`, `PINYINidx.xty`
+% 编写索引表, 文章中用 \printindex 展示, 在索引处用\index{...}添加索引; 用感叹号`!`设置子条目; 用`@`表示排序与显示的不同, @前面为排序序, 后面为显示样式; 用 `..|textbf` 表示加粗页码, `|textit` 表示斜体页码, `|underline` 表示下划线代码. 注意索引表中文需要用 `@` 指定顺序! 如 `\index{ruoshoulian@弱收敛}`
+\usepackage{imakeidx}
+\makeindex[ intoc,                         % 显示在目录
+            columns=2,                     % 双栏显示
+            title = 索引,                  % 索引表标题
+            options= -s myindex.ist]      % 使用样式 `myindex.ist` 
+            
+% 多重索引, 即创建多个索引表. 多重索引用以下的代码, 调用时用`\index[terms]{...}`这样, 打印时要用\printindex[terms]这样; `makeindex[terms]`等和普通的`\makeindex`相独立
+%\makeindex[name=terms,title=术语索引] % name 表示调用索引表使用的名字
+%\makeindex[name=symbols,title=符号索引] % title 表示索引表的标题
+% \makeindex % 一般不用这条
+
+% 定义颜色
+\usepackage[dvipsnames]{xcolor}
+
+% 超链接跳转功能, \ref 和 \label 等; 需要最后加载! 颜色可自行选择.
+\usepackage[
+    % PDF 基本信息
+    pdftitle={Title},     % PDF 标题
+    pdfauthor={H-S.Lin},      % PDF 作者
+    pdfsubject={MyLaTeXTemplate},       % PDF 主题
+    pdfkeywords={LaTeX,Mine}, % PDF 关键字
+    % PDF 打开时的行为
+    pdfstartview=FitH,      % 打开 PDF 时的缩放方式 FitH/FitV/FitB 等
+    pdfpagemode=UseOutlines, % PDF 打开时显示书签面板
+    pdfpagelabels=true,     % 使用页码标签
+    % 链接样式与颜色
+    % hidelinks, % 隐藏所有链接视觉样式
+    % pdfborder={0 0 0}  % 无边框
+    pdfborder={0 0 2},      % 底部2pt边框
+    hyperindex=true, % 启用索引超链接
+    colorlinks=true,         % 用颜色替代边框
+    linkcolor=red,    % 普通链接
+    filecolor=magenta,       % 文档链接
+    citecolor=cyan,         % 引用链接
+    urlcolor=blue,         % 网址链接
+    pdfhighlight=/I,        % 按下反色/I, 不反色/N, 按下外框高亮/O
+    linktocpage=true      % true表示目录中仅页码可点击，而非整个章节名
+    ]{hyperref} 
 
 % 3. 定理环境设置
 % 3.1. 定理以及证明环境样式设置
@@ -227,6 +274,9 @@
 % 所有斜体使用伪斜体(\textsl{}样式), 例如在\emph{}中
 %\let\itshape\slshape
 
+
+
+
 \begin{document}
 \maketitle
 
@@ -256,7 +306,7 @@
 
 
 % 参考文献, 若无可删去, 参考文献写在bib文件中
-\bibliographystyle{amsplain}  % 选择参考文献样式
+\bibliographystyle{amsplain}  % 选择参考文献样式, unsrt为按引用顺序排序
 \bibliography{reference}  % 加载 .bib 文件（不需要文件扩展名）
 
 % 注释以下语句会不显示未引用的文献, 反之显示全部参考文献
@@ -276,4 +326,9 @@
 这篇文章的后记.
 
 
+\printindex
+
+% 用多重索引时候的输出, 与普通的`\printindex`相独立
+%\printindex[terms]
+%\printindex[symbols]
 \end{document}
